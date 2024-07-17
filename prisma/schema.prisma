@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AcademicSemester {
+  id         String    @id @default(uuid())
+  year       String
+  title      String
+  code       String
+  startMonth String
+  endMonth   String
+  createAt   DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
+  students   Student[]
+
+  @@map("academic_semesters")
+}
+
+model AcademicFaculty {
+  id                   String               @id @default(uuid())
+  title                String
+  createAt             DateTime             @default(now())
+  updateAt             DateTime             @updatedAt
+  academic_departments AcademicDepartment[]
+  students             Student[]
+  faculties            Faculty[]
+
+  @@map("academic_faculty")
+}
+
+model AcademicDepartment {
+  id                  String          @id @default(uuid())
+  title               String
+  createAt            DateTime        @default(now())
+  updateAt            DateTime        @updatedAt
+  academic_faculty_id String
+  academic_faculty    AcademicFaculty @relation(fields: [academic_faculty_id], references: [id])
+  students            Student[]
+  faculties           Faculty[]
+
+  @@map("academic_departments")
+}
+
+model Student {
+  id            String   @id @default(uuid())
+  student_id    String
+  first_name    String
+  last_name     String
+  profile_image String
+  email         String
+  contact       Int
+  gender        String
+  bloodgroup    String
+  createAt      DateTime @default(now())
+  updateAt      DateTime @updatedAt
+
+  academic_semester_id   String
+  academic_semester      AcademicSemester   @relation(fields: [academic_semester_id], references: [id])
+  academic_department_id String
+  academic_department    AcademicDepartment @relation(fields: [academic_department_id], references: [id])
+  academic_faculty_id    String
+  academic_faculty       AcademicFaculty    @relation(fields: [academic_faculty_id], references: [id])
+
+  @@map("students")
+}
+
+model Faculty {
+  id            String   @id @default(uuid())
+  student_id    String
+  first_name    String
+  last_name     String
+  profile_image String
+  email         String
+  contact       Int
+  gender        String
+  bloodgroup    String
+  designation   String
+  createAt      DateTime @default(now())
+  updateAt      DateTime @updatedAt
+
+  academic_department_id String
+  academic_department    AcademicDepartment @relation(fields: [academic_department_id], references: [id])
+  academic_faculty_id    String
+  academic_faculty       AcademicFaculty    @relation(fields: [academic_faculty_id], references: [id])
+
+  @@map("faculties")
+}
