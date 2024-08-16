@@ -6,6 +6,8 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import cookieParser from 'cookie-parser';
 import { academicSemesterRoute } from './modules/academicSemester/academicSemester.route';
 import { academicFacultyRoute } from './modules/academicFaculty/academicFaculty.route';
+import { academicDepartmentRoute } from './modules/academicDepartment/academicDepartment.route';
+import { studentRoute } from './modules/student/student.route';
 
 const app: Application = express();
 
@@ -18,6 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/academic-semesters', academicSemesterRoute);
 app.use('/academic-faculties', academicFacultyRoute);
+app.use('/academic-department', academicDepartmentRoute);
+app.use('/student', studentRoute);
 
 
 //global error handler
