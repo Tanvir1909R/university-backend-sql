@@ -1,4 +1,4 @@
-import { AcademicSemester, Prisma, PrismaClient } from '@prisma/client';
+import {  Faculty, Prisma, PrismaClient } from '@prisma/client';
 import { RequestHandler } from 'express';
 import sendResponse from '../../shared/sendResponse';
 import httpStatus from 'http-status';
@@ -12,22 +12,22 @@ type iFilter = {
   search?: string;
 };
 
-export const createSemester: RequestHandler = catchAsync(async (req, res) => {
+export const createFaculty: RequestHandler = catchAsync(async (req, res) => {
   const data = req.body;
-  const result = await prisma.academicSemester.create({
+  const result = await prisma.faculty.create({
     data,
   });
-  sendResponse<AcademicSemester>(res, {
+  sendResponse<Faculty>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'academic semester created',
+    message: 'faculty created',
     data: result,
   });
 });
 
-export const getSemester: RequestHandler = catchAsync(async (req, res) => {
+export const getFaculty: RequestHandler = catchAsync(async (req, res) => {
   const query = req.query;
-  const filter = pick(query, ['title', 'code', 'search']);
+  const filter = pick(query, ['email', 'search']);
   const options = pick(query, ['limit', 'page', 'sortBy', 'sortOrder']);
   const { limit, page, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(options);
@@ -35,7 +35,7 @@ export const getSemester: RequestHandler = catchAsync(async (req, res) => {
   const andCondition = [];
   if (search) {
     andCondition.push({
-      OR: ['title', 'code'].map(field => ({
+      OR: ['firstName', 'lastName'].map(field => ({
         [field]: {
           contains: search,
           mode: 'insensitive',
@@ -53,9 +53,9 @@ export const getSemester: RequestHandler = catchAsync(async (req, res) => {
     });
   }
 
-  const whereCondition: Prisma.AcademicSemesterWhereInput =
+  const whereCondition: Prisma.FacultyWhereInput =
     andCondition.length > 0 ? { AND: andCondition } : {};
-  const result = await prisma.academicSemester.findMany({
+  const result = await prisma.faculty.findMany({
     where: whereCondition,
     skip,
     take: limit,
@@ -72,7 +72,7 @@ export const getSemester: RequestHandler = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'semester get successful',
+    message: 'faculty get successful',
     data: result,
     meta: {
       total,
@@ -82,8 +82,8 @@ export const getSemester: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
-export const getSingleSemester:RequestHandler = catchAsync(async(req,res)=>{
-  const result = await prisma.academicSemester.findFirst({
+export const getSingleFaculty:RequestHandler = catchAsync(async(req,res)=>{
+  const result = await prisma.faculty.findFirst({
     where: {
       id: req.params.id,
     },
@@ -92,13 +92,13 @@ export const getSingleSemester:RequestHandler = catchAsync(async(req,res)=>{
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'semester get successful',
+    message: 'faculty get successful',
     data: result,
   });
 })
 
-export const updateSemester: RequestHandler = catchAsync(async (req, res) => {
-  const result = await prisma.academicSemester.update({
+export const updateFaculty: RequestHandler = catchAsync(async (req, res) => {
+  const result = await prisma.faculty.update({
     where: {
       id: req.params.id,
     },
@@ -108,12 +108,12 @@ export const updateSemester: RequestHandler = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'semester updated successful',
+    message: 'faculty updated successful',
     data: result,
   });
 });
-export const deleteSemester: RequestHandler = catchAsync(async (req, res) => {
-  const result = await prisma.academicSemester.delete({
+export const deleteFaculty: RequestHandler = catchAsync(async (req, res) => {
+  const result = await prisma.faculty.delete({
     where: {
       id: req.params.id,
     },
@@ -122,7 +122,7 @@ export const deleteSemester: RequestHandler = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'semester deleted successful',
+    message: 'faculty deleted successful',
     data: result,
   });
 });
