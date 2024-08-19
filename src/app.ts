@@ -8,6 +8,7 @@ import { academicSemesterRoute } from './modules/academicSemester/academicSemest
 import { academicFacultyRoute } from './modules/academicFaculty/academicFaculty.route';
 import { academicDepartmentRoute } from './modules/academicDepartment/academicDepartment.route';
 import { studentRoute } from './modules/student/student.route';
+import { facultyRoute } from './modules/faculty/faculty.route';
 
 const app: Application = express();
 
@@ -20,8 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/academic-semesters', academicSemesterRoute);
 app.use('/academic-faculties', academicFacultyRoute);
-app.use('/academic-department', academicDepartmentRoute);
-app.use('/student', studentRoute);
+app.use('/academic-departments', academicDepartmentRoute);
+app.use('/students', studentRoute);
+app.use('/faculties', facultyRoute);
 
 
 //global error handler

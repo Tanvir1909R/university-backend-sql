@@ -11,4 +11,4 @@ route.patch('/',updateFaculty)
 route.get('/:id',getSingleFaculty)
 route.delete('/:id',deleteFaculty)
 
-export const academicSemesterRoute =  route
+export const facultyRoute =  route

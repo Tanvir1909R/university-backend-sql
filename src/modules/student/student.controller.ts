@@ -1,10 +1,10 @@
 import { Prisma, PrismaClient, Student } from '@prisma/client';
 import { RequestHandler } from 'express';
-import sendResponse from '../../shared/sendResponse';
 import httpStatus from 'http-status';
+import { paginationHelpers } from '../../helpers/paginationHelper';
 import catchAsync from '../../shared/catchAsync';
 import pick from '../../shared/pick';
-import { paginationHelpers } from '../../helpers/paginationHelper';
+import sendResponse from '../../shared/sendResponse';
 
 const prisma = new PrismaClient();
 
@@ -15,8 +15,8 @@ type iFilter = {
 export const createStudent: RequestHandler = catchAsync(async (req, res) => {
   const data = req.body;
   const result = await prisma.student.create({
-    data,
-  });
+    data
+  })
   sendResponse<Student>(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -67,6 +67,11 @@ export const getStudent: RequestHandler = catchAsync(async (req, res) => {
         : {
             createAt: 'desc',
           },
+          include:{
+            academicDepartment:true,
+            academicFaculty:true,
+            academicSemester:true
+          }
   });
   const total = await prisma.student.count();
   sendResponse(res, {

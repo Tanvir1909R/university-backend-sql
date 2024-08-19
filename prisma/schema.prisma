@@ -54,10 +54,10 @@ model AcademicDepartment {
 
 model Student {
   id            String   @id @default(uuid())
-  studentId    String
+  studentId    String?
   firstName    String
   lastName     String
-  profileImage String
+  profileImage String?
   email         String
   contact       String
   gender        String
@@ -77,10 +77,10 @@ model Student {
 
 model Faculty {
   id            String   @id @default(uuid())
-  facultyId    String
+  facultyId    String?
   firstName    String
   lastName     String
-  profileImage String
+  profileImage String?
   email         String
   contact       String
   gender        String

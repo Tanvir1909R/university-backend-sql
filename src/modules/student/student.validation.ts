@@ -3,7 +3,7 @@ import z from 'zod'
 export const createStudentZodSchema = z.object({
     body:z.object({
         studentId:z.string().optional(),
-        firstName:z.number({
+        firstName:z.string({
             required_error:"first name is required"
         }),
         lastName:z.string({
@@ -13,7 +13,7 @@ export const createStudentZodSchema = z.object({
         email:z.string({
             required_error:"email is required"
         }),
-        contact:z.number({
+        contact:z.string({
             required_error:"contact is required"
         }),
         bloodgroup:z.string({
