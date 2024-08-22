@@ -28,71 +28,93 @@ model AcademicSemester {
 }
 
 model AcademicFaculty {
-  id                   String               @id @default(uuid())
-  title                String
-  createAt             DateTime             @default(now())
-  updateAt             DateTime             @updatedAt
+  id                  String               @id @default(uuid())
+  title               String
+  createAt            DateTime             @default(now())
+  updateAt            DateTime             @updatedAt
   academicDepartments AcademicDepartment[]
-  students             Student[]
-  faculties            Faculty[]
+  students            Student[]
+  faculties           Faculty[]
 
   @@map("academic_faculty")
 }
 
 model AcademicDepartment {
-  id                  String          @id @default(uuid())
-  title               String
-  createAt            DateTime        @default(now())
-  updateAt            DateTime        @updatedAt
+  id                String          @id @default(uuid())
+  title             String
+  createAt          DateTime        @default(now())
+  updateAt          DateTime        @updatedAt
   academicFacultyId String
-  academicFaculty    AcademicFaculty @relation(fields: [academicFacultyId], references: [id])
-  students            Student[]
-  faculties           Faculty[]
+  academicFaculty   AcademicFaculty @relation(fields: [academicFacultyId], references: [id])
+  students          Student[]
+  faculties         Faculty[]
 
   @@map("academic_departments")
 }
 
 model Student {
-  id            String   @id @default(uuid())
+  id           String   @id @default(uuid())
   studentId    String?
   firstName    String
   lastName     String
   profileImage String?
-  email         String
-  contact       String
-  gender        String
-  bloodgroup    String
-  createAt      DateTime @default(now())
-  updateAt      DateTime @updatedAt
+  email        String
+  contact      String
+  gender       String
+  bloodgroup   String
+  createAt     DateTime @default(now())
+  updateAt     DateTime @updatedAt
 
   academicSemesterId   String
-  academicSemester      AcademicSemester   @relation(fields: [academicSemesterId], references: [id])
+  academicSemester     AcademicSemester   @relation(fields: [academicSemesterId], references: [id])
   academicDepartmentId String
-  academicDepartment    AcademicDepartment @relation(fields: [academicDepartmentId], references: [id])
+  academicDepartment   AcademicDepartment @relation(fields: [academicDepartmentId], references: [id])
   academicFacultyId    String
-  academicFaculty       AcademicFaculty    @relation(fields: [academicFacultyId], references: [id])
+  academicFaculty      AcademicFaculty    @relation(fields: [academicFacultyId], references: [id])
 
   @@map("students")
 }
 
 model Faculty {
-  id            String   @id @default(uuid())
+  id           String   @id @default(uuid())
   facultyId    String?
   firstName    String
   lastName     String
   profileImage String?
-  email         String
-  contact       String
-  gender        String
-  bloodgroup    String
-  designation   String
-  createAt      DateTime @default(now())
-  updateAt      DateTime @updatedAt
+  email        String
+  contact      String
+  gender       String
+  bloodgroup   String
+  designation  String
+  createAt     DateTime @default(now())
+  updateAt     DateTime @updatedAt
 
   academicDepartmentId String
-  academicDepartment    AcademicDepartment @relation(fields: [academicDepartmentId], references: [id])
+  academicDepartment   AcademicDepartment @relation(fields: [academicDepartmentId], references: [id])
   academicFacultyId    String
-  academicFaculty       AcademicFaculty    @relation(fields: [academicFacultyId], references: [id])
+  academicFaculty      AcademicFaculty    @relation(fields: [academicFacultyId], references: [id])
 
   @@map("faculties")
+}
+
+model Building {
+  id       String   @id @default(uuid())
+  title    String
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  Room     Room[]
+
+  @@map("building")
+}
+
+model Room {
+  id         String   @id @default(uuid())
+  roomNunber String
+  floor      String
+  buildingId String
+  building   Building @relation(fields: [buildingId], references: [id])
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+
+  @@map("rooms")
 }
