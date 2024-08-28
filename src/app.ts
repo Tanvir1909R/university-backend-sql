@@ -11,6 +11,7 @@ import { studentRoute } from './modules/student/student.route';
 import { facultyRoute } from './modules/faculty/faculty.route';
 import { buildingRoute } from './modules/building/building.route';
 import { roomRoute } from './modules/room/room.route';
+import { courseRoute } from './modules/course/course.route';
 
 const app: Application = express();
 
@@ -28,6 +29,7 @@ app.use('/students', studentRoute);
 app.use('/faculties', facultyRoute);
 app.use('/building', buildingRoute);
 app.use('/room', roomRoute);
+app.use('/course', courseRoute);
 
 //global error handler
 app.use(globalErrorHandler);

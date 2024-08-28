@@ -54,6 +54,36 @@
             "date": 1723928466898,
             "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-18-08-03-error.log",
             "hash": "d1f7a3939cee7930b320cf69c5d3f2d896dfcfdcaefd17c59300356f31fe3db8"
+        },
+        {
+            "date": 1724428645020,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-23-08-21-error.log",
+            "hash": "f092076a2961106a268023ef37b305570551250d923af0bb1800cd83f04713ec"
+        },
+        {
+            "date": 1724494012179,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-24-08-16-error.log",
+            "hash": "813bf9daa7d78a910ed7987fb070da1e30f39ee11ccba58ff5bf1711a9ad859d"
+        },
+        {
+            "date": 1724498552166,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-24-08-17-error.log",
+            "hash": "dfd9a938866c7217839fb865157d08411018d9c9ba5c89de32815fc654fa5e6c"
+        },
+        {
+            "date": 1724500842226,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-24-08-18-error.log",
+            "hash": "e1ae0c623def66d060d2db1e8fadfb1128e59cd28e0f85766ebdc33231fb5903"
+        },
+        {
+            "date": 1724670519566,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-26-08-17-error.log",
+            "hash": "f120f64fccd2476ac9fefd81cd83084f33d018044f87ed7a72c7ce9991081d0e"
+        },
+        {
+            "date": 1724673754710,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-26-08-18-error.log",
+            "hash": "a6e149ca0430715db0ec8d00d2756a1dccb29cdb6508278bc73bca04da652386"
         }
     ],
     "hashType": "sha256"
