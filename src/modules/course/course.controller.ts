@@ -191,3 +191,58 @@ export const deleteCourse: RequestHandler = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+export const removeFaculty:RequestHandler = catchAsync(async(req,res)=>{
+  const id = req.params.id;
+  const {faculties} = req.body
+
+  await prisma.courseFaculty.deleteMany({
+    where:{
+      courseId:id,
+      facultyId:{
+        in: faculties
+      }
+    }
+  })
+
+  const result = await prisma.courseFaculty.findMany({
+    where:{
+      courseId:id
+    },
+    include:{
+      faculty:true
+    }
+  })
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'faculty remove successful',
+    data: result,
+  });
+})
+export const assignFaculty:RequestHandler = catchAsync(async(req,res)=>{
+  const id = req.params.id;
+  const {faculties} = req.body
+
+  await prisma.courseFaculty.createMany({
+    data: faculties.map((facultyId:string)=>({
+      courseId:id,
+      facultyId
+    }))
+  })
+
+  const result = await prisma.courseFaculty.findMany({
+    where:{
+      courseId:id
+    },
+    include:{
+      faculty:true
+    }
+  })
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'faculty assign successful',
+    data: result,
+  });
+})

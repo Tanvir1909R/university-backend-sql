@@ -12,6 +12,7 @@ import { facultyRoute } from './modules/faculty/faculty.route';
 import { buildingRoute } from './modules/building/building.route';
 import { roomRoute } from './modules/room/room.route';
 import { courseRoute } from './modules/course/course.route';
+import { semesterRegisterRoute } from './modules/semesterRegistration/semesterRegister.route';
 
 const app: Application = express();
 
@@ -30,6 +31,7 @@ app.use('/faculties', facultyRoute);
 app.use('/building', buildingRoute);
 app.use('/room', roomRoute);
 app.use('/course', courseRoute);
+app.use('/semester-registration', semesterRegisterRoute);
 
 //global error handler
 app.use(globalErrorHandler);

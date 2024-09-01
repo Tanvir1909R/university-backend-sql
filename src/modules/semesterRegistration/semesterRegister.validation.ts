@@ -1,8 +1,8 @@
 import z from 'zod'
 
-export const createFacultyZodSchema = z.object({
+export const createStudentZodSchema = z.object({
     body:z.object({
-        facultyId:z.string().optional(),
+        studentId:z.string().optional(),
         firstName:z.string({
             required_error:"first name is required"
         }),
@@ -22,14 +22,14 @@ export const createFacultyZodSchema = z.object({
         gender:z.string({
             required_error:"gender is required"
         }),
-        designation:z.string({
-            required_error:"designation is required"
+        academicSemesterId:z.string({
+            required_error:"semester id is required"
         }),
         academicDepartmentId:z.string({
             required_error:"department id is required"
         }),
         academicFacultyId:z.string({
-            required_error:"faculty id is required"
+            required_error:"faculty id  is required"
         })
     })
 })
