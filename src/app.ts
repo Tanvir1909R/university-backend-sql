@@ -13,6 +13,8 @@ import { buildingRoute } from './modules/building/building.route';
 import { roomRoute } from './modules/room/room.route';
 import { courseRoute } from './modules/course/course.route';
 import { semesterRegisterRoute } from './modules/semesterRegistration/semesterRegister.route';
+import { offeredCourseRoute } from './modules/offerdCourse/offeredCourse.route';
+import { offeredCourseSectionRoute } from './modules/offerdCourseSection/offeredCourseSection.route';
 
 const app: Application = express();
 
@@ -32,6 +34,8 @@ app.use('/building', buildingRoute);
 app.use('/room', roomRoute);
 app.use('/course', courseRoute);
 app.use('/semester-registration', semesterRegisterRoute);
+app.use('/offered-course', offeredCourseRoute);
+app.use('/offered-course-section', offeredCourseSectionRoute);
 
 //global error handler
 app.use(globalErrorHandler);
