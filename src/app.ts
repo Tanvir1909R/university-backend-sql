@@ -15,6 +15,7 @@ import { courseRoute } from './modules/course/course.route';
 import { semesterRegisterRoute } from './modules/semesterRegistration/semesterRegister.route';
 import { offeredCourseRoute } from './modules/offerdCourse/offeredCourse.route';
 import { offeredCourseSectionRoute } from './modules/offerdCourseSection/offeredCourseSection.route';
+import { offeredCourseClassRoute } from './modules/offerdCourseClassSchedule/offeredCourseClass.route';
 
 const app: Application = express();
 
@@ -36,6 +37,7 @@ app.use('/course', courseRoute);
 app.use('/semester-registration', semesterRegisterRoute);
 app.use('/offered-course', offeredCourseRoute);
 app.use('/offered-course-section', offeredCourseSectionRoute);
+app.use('/offered-course-class-schedule', offeredCourseClassRoute);
 
 //global error handler
 app.use(globalErrorHandler);
