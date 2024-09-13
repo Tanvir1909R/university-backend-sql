@@ -1,11 +1,11 @@
 import { Prisma, PrismaClient, semesterRegisterStatus } from '@prisma/client';
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
+import ApiError from '../../errors/ApiError';
 import { paginationHelpers } from '../../helpers/paginationHelper';
 import catchAsync from '../../shared/catchAsync';
 import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
-import ApiError from '../../errors/ApiError';
 
 const prisma = new PrismaClient();
 
@@ -33,6 +33,61 @@ export const createSemesterRegister: RequestHandler = catchAsync(async (req, res
     statusCode: httpStatus.OK,
     success: true,
     message: 'Semester Register created',
+    data: result,
+  });
+});
+
+export const startMyRegistration: RequestHandler = catchAsync(async (req, res) => {
+  const user = req.user;
+  const studentInfo = await prisma.student.findFirst({
+    where:{studentId:user!.studentId}
+  })
+
+  if(!studentInfo){
+    throw new ApiError(httpStatus.NOT_FOUND,"user not found")
+  }
+
+  const semesterRegistrationInfo = await prisma.semesterRegistration.findFirst({
+    where:{
+      status:{in:[semesterRegisterStatus.ONGOING,semesterRegisterStatus.UPCOMMING]}
+    }
+  })
+
+  if(semesterRegistrationInfo?.status === semesterRegisterStatus.UPCOMMING){
+    throw new ApiError(httpStatus.BAD_REQUEST,"Registration is not start yet")
+  }
+  let result = await prisma.studentSemesterRegistration.findFirst({
+    where:{
+      student:{
+        id: studentInfo?.id
+      },
+      semesterRegistration:{
+        id:semesterRegistrationInfo?.id
+      }
+    }
+  })
+  if(!result){
+    result = await prisma.studentSemesterRegistration.create({
+      // we can add data manually for studentId and registrationId
+        data:{
+          student:{
+            connect:{
+              id:studentInfo?.id
+            }
+          },
+          semesterRegistration:{
+            connect:{
+              id: semesterRegistrationInfo?.id
+            }
+          }
+        }
+      })
+  }
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Registration stated',
     data: result,
   });
 });

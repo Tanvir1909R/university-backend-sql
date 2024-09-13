@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { JwtPayload } from 'jsonwebtoken';
 
 declare global {
   namespace Express {
-    interface Request {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    export interface Request {
       user: JwtPayload | null;
     }
   }
 }
+

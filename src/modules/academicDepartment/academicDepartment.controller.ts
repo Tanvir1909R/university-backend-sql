@@ -8,9 +8,6 @@ import { paginationHelpers } from '../../helpers/paginationHelper';
 
 const prisma = new PrismaClient();
 
-type iFilter = {
-  search?: string;
-};
 
 export const createDepartment: RequestHandler = catchAsync(async (req, res) => {
   const data = req.body;
@@ -31,7 +28,7 @@ export const getDepartment: RequestHandler = catchAsync(async (req, res) => {
   const options = pick(query, ['limit', 'page', 'sortBy', 'sortOrder']);
   const { limit, page, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(options);
-  const { search, ...directFilter }: iFilter = filter;
+  const { search, ...directFilter } = filter;
   const andCondition = [];
   if (search) {
     andCondition.push({

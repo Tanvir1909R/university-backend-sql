@@ -257,3 +257,16 @@ model StudentSemesterRegistration {
 
   @@map("student_semester_registration")
 }
+
+
+model StudentSemesterRegistrationCourse {
+  semesterRegistrationId String
+  studentId String
+  offeredCourseId String
+  offeredCourseSectionId String
+  createAt               DateTime             @default(now())
+  updateAt               DateTime             @updatedAt
+
+  @@id([semesterRegistrationId,studentId])
+  @@map("student_semester_registration_course")
+}
