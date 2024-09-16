@@ -33,3 +33,14 @@ export const createStudentZodSchema = z.object({
         })
     })
 })
+
+export const enrollWithdrewCourseZodSchema = z.object({
+    body:z.object({
+        offeredCourseSectionId:z.string({
+            required_error:"offered course section id required"
+        }),
+        offeredCourseId:z.string({
+            required_error:"offered course id required"
+        })
+    })
+})

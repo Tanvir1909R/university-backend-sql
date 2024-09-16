@@ -92,6 +92,233 @@ export const startMyRegistration: RequestHandler = catchAsync(async (req, res) =
   });
 });
 
+export const enrollToCourse :RequestHandler = catchAsync(async (req, res) => {
+  const user = req.user
+  const payload = req.body
+  const student = await prisma.student.findFirst({
+    where:{studentId:user!.userId}
+  })
+
+  if(!student){
+    throw new ApiError(httpStatus.NOT_FOUND,`user not found`)
+  }
+  const semesterRegistration = await prisma.semesterRegistration.findFirst({
+    where:{
+      status:semesterRegisterStatus.ONGOING
+    }
+  })
+  if(!semesterRegistration){
+    throw new ApiError(httpStatus.NOT_FOUND,`registration not found`)
+  }
+  const offeredCourse = await prisma.offeredCourse.findFirst({
+    where:{id:payload.offeredCourseId},
+    include:{course:true}
+  })
+  if(!offeredCourse){
+    throw new ApiError(httpStatus.NOT_FOUND,`offered course not found`)
+  }
+  const offeredCourseSection = await prisma.offeredCourseSection.findFirst({
+    where:{id:payload.offeredCourseSectionId}
+  })
+  if(!offeredCourseSection){
+    throw new ApiError(httpStatus.NOT_FOUND,`offered course section not found`)
+  }
+
+  if(offeredCourseSection.currentlyEnrolledStudent && offeredCourseSection.maxCapacity && offeredCourseSection.currentlyEnrolledStudent > offeredCourseSection.maxCapacity){
+    throw new ApiError(httpStatus.BAD_REQUEST,`maximum capacity reached`)
+  }
+
+  await prisma.$transaction(async(tc)=>{
+    await tc.studentSemesterRegistrationCourse.create({
+      data:{
+        studentId:student?.id,
+        semesterRegistrationId:semesterRegistration?.id,
+        offeredCourseId:payload.offeredCourseId,
+        offeredCourseSectionId:payload.offeredCourseSectionId 
+      }
+    })
+
+    await tc.offeredCourseSection.update({
+      where:{id:payload.offeredCourseSectionId},
+      data:{
+        currentlyEnrolledStudent:{
+          increment: 1
+        }
+      }
+    })
+    await tc.studentSemesterRegistration.updateMany({
+      where:{
+        student:{id:student.id},
+        semesterRegistration:{id:semesterRegistration.id}
+      },
+      data:{
+        totalCreditsTaken:{
+          increment:+(offeredCourse.course.credit)!
+        }
+      }
+    })
+  })
+
+  
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Semester enroll complete',
+    // data: enrollCourse,
+  });
+});
+
+export const withdrewFromCourse :RequestHandler = catchAsync(async (req, res) => {
+  const user = req.user
+  const payload = req.body
+  const student = await prisma.student.findFirst({
+    where:{studentId:user!.userId}
+  })
+
+  if(!student){
+    throw new ApiError(httpStatus.NOT_FOUND,`user not found`)
+  }
+  const semesterRegistration = await prisma.semesterRegistration.findFirst({
+    where:{
+      status:semesterRegisterStatus.ONGOING
+    }
+  })
+  if(!semesterRegistration){
+    throw new ApiError(httpStatus.NOT_FOUND,`registration not found`)
+  }
+  const offeredCourse = await prisma.offeredCourse.findFirst({
+    where:{id:payload.offeredCourseId},
+    include:{course:true}
+  })
+  if(!offeredCourse){
+    throw new ApiError(httpStatus.NOT_FOUND,`offered course not found`)
+  }
+
+  await prisma.$transaction(async(tc)=>{
+    await tc.studentSemesterRegistrationCourse.delete({
+      where:{
+        semesterRegistrationId_studentId:{
+          semesterRegistrationId:semesterRegistration?.id,
+          studentId:student?.id
+        }
+      }
+    })
+
+    await tc.offeredCourseSection.update({
+      where:{id:payload.offeredCourseSectionId},
+      data:{
+        currentlyEnrolledStudent:{
+          decrement: 1
+        }
+      }
+    })
+    await tc.studentSemesterRegistration.updateMany({
+      where:{
+        student:{id:student.id},
+        semesterRegistration:{id:semesterRegistration.id}
+      },
+      data:{
+        totalCreditsTaken:{
+          decrement:+(offeredCourse.course.credit)!
+        }
+      }
+    })
+  })
+
+  
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Semester withdrew complete',
+    // data: enrollCourse,
+  });
+});
+
+export const confirmMyRegistration :RequestHandler = catchAsync(async (req, res) => {
+  const user = req.user
+  const semesterRegistration = await prisma.semesterRegistration.findFirst({
+    where:{
+      status:semesterRegisterStatus.ONGOING
+    }
+  })
+  if(!semesterRegistration){
+    throw new ApiError(httpStatus.NOT_FOUND,`registration not found`)
+  }
+
+  const studentSemesterRegistration = await prisma.studentSemesterRegistration.findFirst({
+    where:{
+      semesterRegistration:{
+        id:semesterRegistration?.id
+      },
+      student:{
+        studentId:user!.userId
+      }
+    }
+  })
+
+  if(!studentSemesterRegistration){
+    throw new ApiError(httpStatus.BAD_REQUEST,`you are not recognize`)
+  }
+
+  if(studentSemesterRegistration.totalCreditsTaken === 0){
+    throw new ApiError(httpStatus.BAD_REQUEST,`you are not enrolled any course`)
+    
+  }
+
+  if(studentSemesterRegistration.totalCreditsTaken && semesterRegistration.minCredit && semesterRegistration.maxCredit && (studentSemesterRegistration.totalCreditsTaken < semesterRegistration.minCredit && studentSemesterRegistration.totalCreditsTaken > semesterRegistration.maxCredit)){
+    throw new ApiError(httpStatus.BAD_REQUEST,`you can take only ${semesterRegistration.minCredit} to ${semesterRegistration.maxCredit}`)
+
+  }
+  await prisma.studentSemesterRegistration.update({
+    where:{
+      id:studentSemesterRegistration.id
+    },
+    data:{
+      isConfirm:true
+    }
+  })
+
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: ' complete',
+    // data: enrollCourse,
+  });
+});
+
+export const getMyRegistration:RequestHandler = catchAsync(async(req,res)=>{
+  const user = req.user
+  const semesterRegister = await prisma.semesterRegistration.findFirst({
+    where: {
+      status:semesterRegisterStatus.ONGOING
+    },
+  });
+
+  const studentSemesterRegistration = await prisma.studentSemesterRegistration.findFirst({
+    where:{
+      semesterRegistration:{
+        id:semesterRegister?.id
+      },
+      student:{
+        studentId: user!.userId
+      }
+    }
+  })
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'registration data fetch successful',
+    data: {
+      semesterRegister,
+      studentSemesterRegistration
+    }
+  });
+})
+
 export const getSemesterRegister: RequestHandler = catchAsync(async (req, res) => {
   const query = req.query;
   const filter = pick(query, ['email', 'search']);
