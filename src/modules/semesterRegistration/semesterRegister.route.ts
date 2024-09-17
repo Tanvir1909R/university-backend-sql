@@ -2,9 +2,10 @@ import { Router } from 'express';
 // import validateRequest from "../../app/middlewares/validateRequest";
 // import { createStudentZodSchema } from "./semesterRegister.validation";
 import auth from '../../app/middlewares/auth';
+import validateRequest from '../../app/middlewares/validateRequest';
 import { ENUM_USER_ROLE } from '../../enums/user';
 import {
-    confirmMyRegistration,
+  confirmMyRegistration,
   createSemesterRegister,
   deleteSemesterRegister,
   enrollToCourse,
@@ -12,10 +13,10 @@ import {
   getSemesterRegister,
   getSingleSemesterRegister,
   startMyRegistration,
+  startNewSemester,
   updateSemesterRegister,
   withdrewFromCourse,
 } from './semesterRegister.controller';
-import validateRequest from '../../app/middlewares/validateRequest';
 import { enrollWithdrewCourseZodSchema } from './semesterRegister.validation';
 
 const route = Router();
@@ -50,6 +51,7 @@ route.post('/', createSemesterRegister);
 route.get('/', getSemesterRegister);
 route.patch('/', updateSemesterRegister);
 route.get('/:id', getSingleSemesterRegister);
+route.post('/:id/start-new-semester',auth(ENUM_USER_ROLE.ADMIN),startNewSemester)
 route.delete('/:id', deleteSemesterRegister);
 
 export const semesterRegisterRoute = route;
