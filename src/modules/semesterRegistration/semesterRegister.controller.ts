@@ -6,6 +6,8 @@ import { paginationHelpers } from '../../helpers/paginationHelper';
 import catchAsync from '../../shared/catchAsync';
 import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
+import { createEnrollCourseMark } from '../studentEnrollCourseMark/studentEnrollCourseMark.controller';
+import { createSemesterPayment } from '../studentSemesterPayment/studentSemesterPayment.controller';
 
 const prisma = new PrismaClient();
 
@@ -405,8 +407,16 @@ export const startNewSemester: RequestHandler = catchAsync(async (req, res) => {
       });
 
     for (const semesterSR of studentSemesterRegistrations) {
+      if(semesterSR.totalCreditsTaken){
+        const totalPayment = semesterSR.totalCreditsTaken * 5000;
+        await createSemesterPayment(tc,{
+          studentId: semesterSR.studentId,
+          academicSemesterId:semesterRegistration.academicSemesterId,
+          totalPaymentAmount:totalPayment
+        })
+      }
       const studentSemesterRegistrationCourses =
-        await prisma.studentSemesterRegistrationCourse.findMany({
+        await tc.studentSemesterRegistrationCourse.findMany({
           where: {
             semesterRegistration: { id },
             student: {
@@ -422,7 +432,7 @@ export const startNewSemester: RequestHandler = catchAsync(async (req, res) => {
           },
         });
       for (const item of studentSemesterRegistrationCourses) {
-        const isExist = await prisma.studentEnrollCourse.findFirst({
+        const isExist = await tc.studentEnrollCourse.findFirst({
           where: {
             studentId: item.studentId,
             courseId: item.offeredCourse.courseId,
@@ -436,9 +446,14 @@ export const startNewSemester: RequestHandler = catchAsync(async (req, res) => {
             academicSemesterId: semesterRegistration.academicSemesterId,
           };
 
-          await prisma.studentEnrollCourse.create({
+          const studentEnrollCourseData = await tc.studentEnrollCourse.create({
             data: enrollCourseData,
           });
+          await createEnrollCourseMark(tc,{
+            studentId: item.studentId,
+            academicSemesterId:semesterRegistration.academicSemesterId,
+            studentEnrollCourseId:studentEnrollCourseData.id
+          })
         }
       }
     }

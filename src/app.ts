@@ -4,18 +4,19 @@ import httpStatus from 'http-status';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 
 import cookieParser from 'cookie-parser';
-import { academicSemesterRoute } from './modules/academicSemester/academicSemester.route';
-import { academicFacultyRoute } from './modules/academicFaculty/academicFaculty.route';
 import { academicDepartmentRoute } from './modules/academicDepartment/academicDepartment.route';
-import { studentRoute } from './modules/student/student.route';
-import { facultyRoute } from './modules/faculty/faculty.route';
+import { academicFacultyRoute } from './modules/academicFaculty/academicFaculty.route';
+import { academicSemesterRoute } from './modules/academicSemester/academicSemester.route';
 import { buildingRoute } from './modules/building/building.route';
-import { roomRoute } from './modules/room/room.route';
 import { courseRoute } from './modules/course/course.route';
-import { semesterRegisterRoute } from './modules/semesterRegistration/semesterRegister.route';
+import { facultyRoute } from './modules/faculty/faculty.route';
 import { offeredCourseRoute } from './modules/offerdCourse/offeredCourse.route';
-import { offeredCourseSectionRoute } from './modules/offerdCourseSection/offeredCourseSection.route';
 import { offeredCourseClassRoute } from './modules/offerdCourseClassSchedule/offeredCourseClass.route';
+import { offeredCourseSectionRoute } from './modules/offerdCourseSection/offeredCourseSection.route';
+import { roomRoute } from './modules/room/room.route';
+import { semesterRegisterRoute } from './modules/semesterRegistration/semesterRegister.route';
+import { studentRoute } from './modules/student/student.route';
+import { studentMarkRoute } from './modules/studentEnrollCourseMark/studentEnrollCourseMark.route';
 
 const app: Application = express();
 
@@ -38,6 +39,7 @@ app.use('/semester-registration', semesterRegisterRoute);
 app.use('/offered-course', offeredCourseRoute);
 app.use('/offered-course-section', offeredCourseSectionRoute);
 app.use('/offered-course-class-schedule', offeredCourseClassRoute);
+app.use('/student-enrolled-course-marks', studentMarkRoute);
 
 //global error handler
 app.use(globalErrorHandler);
