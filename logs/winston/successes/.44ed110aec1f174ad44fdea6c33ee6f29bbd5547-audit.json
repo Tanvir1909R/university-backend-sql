@@ -6,76 +6,6 @@
     "auditLog": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\.44ed110aec1f174ad44fdea6c33ee6f29bbd5547-audit.json",
     "files": [
         {
-            "date": 1725639145052,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-06-09-22-success.log",
-            "hash": "a1b9edf14f20fe734c52972a2f636871c3770d960592c06e0061473b8af33d97"
-        },
-        {
-            "date": 1725642710897,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-06-09-23-success.log",
-            "hash": "6cfbfbc68783caa91882bdc6c14debd3ff79351b91f13c9f0bc4678681f6fdba"
-        },
-        {
-            "date": 1725647994565,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-07-09-00-success.log",
-            "hash": "c3f19fcd7bda22b22441cc7f07e185a5c29b1ff49f99eb3439d71d49b43df409"
-        },
-        {
-            "date": 1725649307977,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-07-09-01-success.log",
-            "hash": "db8b73bc1d61c8a4a0d6100fa07384b701e3fd9bb27414b698067e6822514dcb"
-        },
-        {
-            "date": 1725706583182,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-07-09-16-success.log",
-            "hash": "1f36382227746fb8fb02b84aa8ab4daef55a6a3a36fae04320c6b69a94f761f2"
-        },
-        {
-            "date": 1725707194209,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-07-09-17-success.log",
-            "hash": "13f9d0345f590f1ac79ecb6cc56a20bae2b87046a4daa76936fd4d19eba47797"
-        },
-        {
-            "date": 1725710676519,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-07-09-18-success.log",
-            "hash": "1c437e1a038c56ddaf7f9832b4c0b567626135ca9da1bcd7d28a08aadfad626f"
-        },
-        {
-            "date": 1725716507742,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-07-09-19-success.log",
-            "hash": "8d2c2b61a48009b2107e91b0f1034f758b24364530f4eeb460a7daf17bb1d26d"
-        },
-        {
-            "date": 1725717634465,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-07-09-20-success.log",
-            "hash": "21c560e3a35c989dbfb4f8b035f50aaea9b7efb75ac74dbba78918332606db05"
-        },
-        {
-            "date": 1725722166060,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-07-09-21-success.log",
-            "hash": "eece1273ecd5d95a44f8603d8a7d1d073aee6f5d4271e9889a4b4697bb95e0ee"
-        },
-        {
-            "date": 1725726581741,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-07-09-22-success.log",
-            "hash": "9c208bd12cc9b078f85ce0941dec63531ba215ba7574280d9b3dedaf424b4ef8"
-        },
-        {
-            "date": 1725728557167,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-07-09-23-success.log",
-            "hash": "39e9343351c18bcc8d8896d291ca726afacf66bc18348e075c02675bf84917dd"
-        },
-        {
-            "date": 1725732749476,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-08-09-00-success.log",
-            "hash": "6ccc1e41f528b800ab0d70b46d87a424f32044161c9d0effdd229b1594ebe964"
-        },
-        {
-            "date": 1725736300829,
-            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-08-09-01-success.log",
-            "hash": "0be982201f0df4e2ee4e2f51448d88a8e388ca97bd5dad0f3480a9c441aa988c"
-        },
-        {
             "date": 1726249838240,
             "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-13-09-23-success.log",
             "hash": "b956cf7dfc5ecd3461f11095bf55f51d3ca9691e941b1a2a095ed07ffbbc5b3e"
@@ -199,6 +129,41 @@
             "date": 1726848306654,
             "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-20-09-22-success.log",
             "hash": "18096361cbb8ee60bddb3b9d2365fd97a8735220c45e7b1dcf1e0738f6f7bdb0"
+        },
+        {
+            "date": 1726855162515,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-20-09-23-success.log",
+            "hash": "8129edc1682818f00e282e76c03875d0a9bcfe443cf1c95143b0a3bf2ab9f249"
+        },
+        {
+            "date": 1726855419782,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-21-09-00-success.log",
+            "hash": "6238710f0af5760882939972973b20795f40066016c16111e276387818ac359f"
+        },
+        {
+            "date": 1726863234253,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-21-09-02-success.log",
+            "hash": "f5cd8a1881d80d5b33561c380614cfd2472b87da9febdd6ca9a4d2c259cb3387"
+        },
+        {
+            "date": 1726869144529,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-21-09-03-success.log",
+            "hash": "02f18fdf8951aa7b59a488c694fba006cdea1b0745842962d1336439e9894889"
+        },
+        {
+            "date": 1727188635272,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-24-09-20-success.log",
+            "hash": "15f9a65077511a4ce5937adfdb9f82673cac0cce8bd1d708ad0199cd129132af"
+        },
+        {
+            "date": 1727190645173,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-24-09-21-success.log",
+            "hash": "ae40921583bf4a5d1f5ec6640b7429521df9fa79a09b52da8e75b1d2f5ddd823"
+        },
+        {
+            "date": 1727198186943,
+            "name": "D:\\p2\\next lavel web dev\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2024-24-09-23-success.log",
+            "hash": "7fe74c377bc1676373b338ed277fac629957030f7121b38ba67f91b9353dad75"
         }
     ],
     "hashType": "sha256"

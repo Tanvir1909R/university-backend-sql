@@ -165,7 +165,7 @@ export const updateFinalMarks = catchAsync(async (req, res) => {
     Math.ceil(midTermMarks * 0.4) + Math.ceil(finalTermMarks * 0.6);
   const markData = getGradeFromMark(totalFinalMarks);
 
-  const result = await prisma.studentEnrollCourse.updateMany({
+   await prisma.studentEnrollCourse.updateMany({
     where: {
       student: {
         id: studentId,
@@ -199,19 +199,42 @@ export const updateFinalMarks = catchAsync(async (req, res) => {
 
   const academicResult = calGrade(grade)
 
-  await prisma.studentAcademicInfo.create({
-    data:{
-      studentId,
-      totalCompletedCredit:academicResult.totalCompletedCredit,
-      cgpa:academicResult.cgpa
+  const studentAcademicInfo = await prisma.studentAcademicInfo.findFirst({
+    where: {
+      student: {
+        id: studentId
+      }
     }
-  })
+  });
+  
+  if (studentAcademicInfo) {
+    await prisma.studentAcademicInfo.update({
+      where: {
+        id: studentAcademicInfo.id
+      },
+      data: {
+        totalCompletedCredit: academicResult.totalCompletedCredit,
+        cgpa: academicResult.cgpa
+      }
+    });
+  }else{
+
+    await prisma.studentAcademicInfo.create({
+      data:{
+        studentId,
+        totalCompletedCredit:academicResult.totalCompletedCredit,
+        cgpa:academicResult.cgpa
+      }
+    })
+  }
+  
+
 
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'final mark update successful',
-    data:result
+    data:grade
   });
 });

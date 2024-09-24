@@ -6,6 +6,7 @@ import { paginationHelpers } from '../../helpers/paginationHelper';
 import catchAsync from '../../shared/catchAsync';
 import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
+import { checkFacultyAvailable, checkRoomAvailable } from '../offerdCourseClassSchedule/offeredClassUtils';
 
 const prisma = new PrismaClient();
 
@@ -15,25 +16,90 @@ type iFilter = {
 
 export const createOfferedCourseSection: RequestHandler = catchAsync(
   async (req, res) => {
-    const body = req.body;
+    const {classSchedules,...data} = req.body;
     const isExist = await prisma.offeredCourse.findFirst({
       where: {
-        id:body.offeredCourseId
+        id:data.offeredCourseId
       }
     });
     if (!isExist) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'offered course not found');
     }
-    body.semesterRegistrationId = isExist.semesterRegistrationId;
-    const result = await prisma.offeredCourseSection.create({
-      data: body,
+    
+    //room available 
+   
+    // const result = await prisma.offeredCourseSection.create({
+    //   data: body,
+    // });
+    for (const schedule of classSchedules){
+      await checkRoomAvailable(schedule)
+      await checkFacultyAvailable(schedule)
+    }
+    const offerCourseSectionData = await prisma.offeredCourseSection.findFirst({
+      where: {
+        offeredCourse: {
+          id: data.offeredCourseId,
+        },
+        title: data.title,
+      },
     });
+    
+    if (offerCourseSectionData) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Course Section already exists");
+    }
+    
+    const createSection = await  prisma.$transaction(async(tc)=>{
+      const createOfferCourse = await tc.offeredCourseSection.create({
+        data: {
+          title: data.title,
+          maxCapacity: data.maxCapacity,
+          offeredCourseId: data.offeredCourseId,
+          semesterRegistrationId: isExist.semesterRegistrationId
+        }
+      })
+      const schedulesData = classSchedules.map((schedule:any)=>({
+        startTime:schedule.startTime,
+        endTime:schedule.endTime,
+        dayOfWeek:schedule.dayOfWeek,
+        roomId:schedule.roomId,
+        facultyId:schedule.facultyId,
+        offeredCourseSectionId:createOfferCourse.id,
+        semesterRegistrationId:isExist.semesterRegistrationId
 
+      }))
+       await tc.offeredCourseClassSchedule.createMany({
+        data:schedulesData
+      })
+      return createOfferCourse
+    })
+    const result = await prisma.offeredCourseSection.findFirst({
+      where: {
+        id: createSection.id,
+      },
+      include: {
+        offeredCourse: {
+          include: {
+            course: true,
+          }
+        },
+        offeredCourseClassSchedule:{
+          include:{
+            room:{
+              include:{
+                building:true
+              }
+            },
+            faculty:true
+          }
+        }
+      },
+    });
+    
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'offer created',
-      data: result,
+      data:result,
     });
   }
 );
