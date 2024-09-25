@@ -1,10 +1,10 @@
-import {  Faculty, Prisma, PrismaClient } from '@prisma/client';
+import { Faculty, Prisma, PrismaClient } from '@prisma/client';
 import { RequestHandler } from 'express';
-import sendResponse from '../../shared/sendResponse';
 import httpStatus from 'http-status';
+import { paginationHelpers } from '../../helpers/paginationHelper';
 import catchAsync from '../../shared/catchAsync';
 import pick from '../../shared/pick';
-import { paginationHelpers } from '../../helpers/paginationHelper';
+import sendResponse from '../../shared/sendResponse';
 
 const prisma = new PrismaClient();
 
@@ -126,3 +126,65 @@ export const deleteFaculty: RequestHandler = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+export const myCourses: RequestHandler = catchAsync(async (req, res) => {
+  const user = req.user
+  const currentSemester = await prisma.academicSemester.findFirst({
+    where: {
+      isCurrent: true
+    }
+  });
+  const offeredCourseSections = await prisma.offeredCourseSection.findMany({
+    where: {
+      offeredCourseClassSchedule: {
+        some: {
+          faculty: {
+            facultyId: user?.userId
+          }
+        }
+      },
+      offeredCourse: {
+        semesterRegistration: {
+          academicSemester: {
+            id: currentSemester?.id
+          }
+        }
+      }
+    },
+    include:{
+      offeredCourse:{
+        include:{
+          course:true
+        }
+      }
+    }
+  });
+
+  const courseAndSchedules = offeredCourseSections.reduce((acc:any,obj:any)=>{
+    console.log(obj);
+    const course = obj.offeredCourse.course;
+    const classSchedules = obj.offeredCourseClassSchedule
+    const existingCourse = acc.find((item:any)=> item.course?.id === course?.id)
+    if(existingCourse){
+      existingCourse.section.push({
+        section: obj,
+        classSchedules
+      })
+    }else{
+      acc.push({
+        course,
+        section:[{
+          section:obj,
+          classSchedules
+        }]
+      })
+    }
+    return acc
+  },[])
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'my course get successful',
+    data: courseAndSchedules,
+  });
+})

@@ -131,3 +131,28 @@ export const deleteStudent: RequestHandler = catchAsync(async (req, res) => {
     data: result,
   });
 });
+export const myCourses: RequestHandler = catchAsync(async (req, res) => {
+  const user = req.user
+  const currentSemester = await prisma.academicSemester.findFirst({
+    where: {
+      isCurrent: true
+    }
+  });
+  const result = await prisma.studentEnrollCourse.findMany({
+    where: {
+      student: {
+        studentId: user?.userId
+      },
+      academicSemesterId: currentSemester?.id
+    }
+  });
+  
+  
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'my course get successful',
+    data: result,
+  });
+});
