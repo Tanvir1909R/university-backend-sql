@@ -7,7 +7,7 @@ import { createFacultyZodSchema } from "./faculty.validation";
 
 const route = Router()
 
-route.get('/my-course',auth(ENUM_USER_ROLE.FACULTY),myCourses)
+route.get('/my-courses',auth(ENUM_USER_ROLE.FACULTY),myCourses)
 route.post('/',validateRequest(createFacultyZodSchema),createFaculty)
 route.get('/',getFaculty)
 route.patch('/',updateFaculty)

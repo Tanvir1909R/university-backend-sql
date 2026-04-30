@@ -10,6 +10,7 @@ import {
   deleteSemesterRegister,
   enrollToCourse,
   getMyRegistration,
+  getMySemesterRegCourse,
   getSemesterRegister,
   getSingleSemesterRegister,
   startMyRegistration,
@@ -46,6 +47,11 @@ route.get(
   '/get-my-registration',
   auth(ENUM_USER_ROLE.STUDENT),
   getMyRegistration
+);
+route.get(
+  '/get-my-semester-courses',
+  auth(ENUM_USER_ROLE.STUDENT),
+  getMySemesterRegCourse
 );
 route.post('/', createSemesterRegister);
 route.get('/', getSemesterRegister);

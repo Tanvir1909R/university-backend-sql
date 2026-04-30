@@ -5,6 +5,8 @@ import httpStatus from 'http-status';
 import catchAsync from '../../shared/catchAsync';
 import pick from '../../shared/pick';
 import { paginationHelpers } from '../../helpers/paginationHelper';
+import ApiError from '../../errors/ApiError';
+import { RedisClient } from '../../shared/redis';
 
 const prisma = new PrismaClient();
 
@@ -12,11 +14,27 @@ type iFilter = {
   search?: string;
 };
 
+const academicTitleCode: {
+  [key: string]: string;
+} = {
+  autumn: "01",
+  summer: "02",
+  fall: "03",
+};
+
 export const createSemester: RequestHandler = catchAsync(async (req, res) => {
   const data = req.body;
+  if (academicTitleCode[data.title] !== data.code) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid semester code");
+  }
+  
   const result = await prisma.academicSemester.create({
     data,
   });
+  
+  if(result){
+    await RedisClient.publish('academic-semester.create',JSON.stringify(result))
+  }
   sendResponse<AcademicSemester>(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -104,7 +122,9 @@ export const updateSemester: RequestHandler = catchAsync(async (req, res) => {
     },
     data: req.body,
   });
-
+  if(result){
+    await RedisClient.publish('academic-semester.update',JSON.stringify(result))
+  }
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

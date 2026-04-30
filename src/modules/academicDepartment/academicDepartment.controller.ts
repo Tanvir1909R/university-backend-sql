@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../shared/catchAsync';
 import pick from '../../shared/pick';
 import { paginationHelpers } from '../../helpers/paginationHelper';
+import { RedisClient } from '../../shared/redis';
 
 const prisma = new PrismaClient();
 
@@ -14,6 +15,9 @@ export const createDepartment: RequestHandler = catchAsync(async (req, res) => {
   const result = await prisma.academicDepartment.create({
     data,
   });
+  if(result){
+    RedisClient.publish('academic-department.create',JSON.stringify(result))
+  }
   sendResponse<AcademicDepartment>(res, {
     statusCode: httpStatus.OK,
     success: true,

@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, semesterRegisterStatus } from '@prisma/client';
+import { Prisma, PrismaClient, semesterRegisterStatus, StudentEnrollCourseStatus } from '@prisma/client';
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 import ApiError from '../../errors/ApiError';
@@ -8,6 +8,7 @@ import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
 import { createEnrollCourseMark } from '../studentEnrollCourseMark/studentEnrollCourseMark.controller';
 import { createSemesterPayment } from '../studentSemesterPayment/studentSemesterPayment.controller';
+import { getAvailableCourses } from './semesterRegisterUtils';
 
 const prisma = new PrismaClient();
 
@@ -606,6 +607,99 @@ export const deleteSemesterRegister: RequestHandler = catchAsync(
       success: true,
       message: 'student deleted successful',
       data: result,
+    });
+  }
+);
+export const getMySemesterRegCourse: RequestHandler = catchAsync(
+  async (req, res) => {
+    const user = req.user
+    const student = await prisma.student.findFirst({
+      where:{
+        studentId:user?.userId
+      }
+    })
+    const semesterRegistration = await prisma.semesterRegistration.findFirst({
+      where: {
+        status: {
+          in: [semesterRegisterStatus.UPCOMMING, semesterRegisterStatus.ONGOING],
+        },
+      },
+      include: {
+        academicSemester: true,
+      },
+    });
+    if (!semesterRegistration) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Semester registration not found!");
+    }
+    
+    const studentCompletedCourse = await prisma.studentEnrollCourse.findMany({
+      where: {
+        status: StudentEnrollCourseStatus.COMPLETE,
+        student: {
+          id: student?.id,
+        },
+      },
+      include: {
+        course: true,
+      },
+    });
+    const studentCurrentSemesterTakenCourse = await prisma.studentSemesterRegistrationCourse.findMany({
+      where:{
+        student:{
+          id:student?.id
+        },
+        semesterRegistration:{
+          id:semesterRegistration?.id
+        }
+      },
+      include:{
+        offeredCourse:true,
+        offeredCourseSection:true
+      }
+    })
+
+    const offeredCourse = await prisma.offeredCourse.findMany({
+      where:{
+        semesterRegistration:{
+          id:semesterRegistration.id
+        },
+        department:{
+          id:student?.academicDepartmentId
+        }
+      },
+      include:{
+        course:{
+          include:{
+            rerequisite:{
+              include:{
+                prerequisite:true
+              }
+            }
+          }
+        },
+        offeredCourseSection:{
+          include:{
+            offeredCourseClassSchedule:{
+              include:{
+                room:{
+                  include:{
+                    building:true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+    const availableCourses = getAvailableCourses(offeredCourse,studentCompletedCourse,studentCurrentSemesterTakenCourse)
+    
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'student deleted successful',
+      data: availableCourses,
     });
   }
 );

@@ -2,11 +2,13 @@ import { Router } from "express";
 import auth from "../../app/middlewares/auth";
 import validateRequest from "../../app/middlewares/validateRequest";
 import { ENUM_USER_ROLE } from "../../enums/user";
-import { createStudent, deleteStudent, getSingleStudent, getStudent, myCourses, updateStudent } from "./student.controller";
+import { createStudent, deleteStudent, getMyCourseSchedules, getSingleStudent, getStudent, myAcademicInfo, myCourses, updateStudent } from "./student.controller";
 import { createStudentZodSchema } from "./student.validation";
 
 const route = Router()
 route.get('/my-courses',auth(ENUM_USER_ROLE.STUDENT),myCourses)
+route.get('/my-course-schedules',auth(ENUM_USER_ROLE.STUDENT),getMyCourseSchedules)
+route.get('/my-academic-info',auth(ENUM_USER_ROLE.STUDENT),myAcademicInfo)
 route.post('/',validateRequest(createStudentZodSchema),createStudent)
 route.get('/',getStudent)
 route.patch('/',updateStudent)
